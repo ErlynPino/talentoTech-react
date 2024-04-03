@@ -2,12 +2,12 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const users = [
     {
-        "_id": "65f4bba755f73d0b5b6d681b",
-        "id": 45451222,
-        "name": "Mario",
-        "lastname": "Sanchez",
-        "email": "mario@correo1'.com",
-        "password": "$2b$10$iHqI/AWVdPPVfPZJN5tOXu0QuWGC4VqjfAgKnrog1QjRMpdnj4Oci",        
+        "_id": "65d3ddfb3e75d61e43a5124f",
+        "id": 1234,
+        "name": "Erlyn",
+        "lastname": "Pino",
+        "email": "erlynpino@gmail.com",
+        "password": "$2b$10$bhxT4lCQjB6I/S6591514eE/BmWownnCtfFNvGb5eWAUoecij4kea",        
     }
 ]
 

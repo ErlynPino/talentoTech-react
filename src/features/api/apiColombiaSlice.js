@@ -16,4 +16,4 @@ export const apiColombiaSlice = createApi({
 })
 
 export const { useGetDepartmentsQuery, 
-                useGetCitiesByDepartmentQuery } = apiColombiaSlice;
+                useLazyGetCitiesByDepartmentQuery } = apiColombiaSlice;

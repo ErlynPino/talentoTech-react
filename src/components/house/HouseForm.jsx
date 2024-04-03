@@ -1,10 +1,22 @@
-import { useGetDepartmentsQuery } from "../../features/api/apiColombiaSlice";
+import { useState } from 'react';
+import { useGetCitiesByDepartmentQuery, useGetDepartmentsQuery } from "../../features/api/apiColombiaSlice";
 
 /** Componente reutilizable para Crear y Actualizar un Usuario */
 export default function HouseForm({props}){
     const { handleSubmit, handleChangeAvatar, house } = props
 
     const { data: departments, isLoading, isError, error} = useGetDepartmentsQuery();
+    const [selectedDepartment, setSelectedDepartment] = useState(5);
+    const [getCities] = useLazyGetCitiesByDepartmentQuery();
+    const [cities, setCities] = useState([]);
+
+    const handleChangeDepartment = async (e) => {
+        setCities([]) // limpiar la lista de ciudades
+        setSelectedDepartment(e.target.value);
+        const response = await getCities(e.target.value);
+        setCities(response.data);
+        console.log(response.data);
+    }
 
     if (isLoading) return <div role="status" className='flex justify-center'>
         <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,11 +39,23 @@ export default function HouseForm({props}){
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2">Department</label>
-                    <select name="department" required
+                    <select name="department" required 
+                            onChange={handleChangeDepartment}
+                            defaultValue={selectedDepartment} // Setenado a Bogota como predeterminado
                             className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                        <option value="">-</option>
+                        <option value="">Seleccionar un Departamento</option>
                         {departments.map(department => (
                             <option key={department.id} value={department.id}>{department.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-bold mb-2">City</label>
+                    <select name="city"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                        <option value="">Seleccionar una Ciudad</option>
+                        {cities.map(city => (
+                            <option key={city.id} value={city.id}>{city.name}</option>
                         ))}
                     </select>
                 </div>
