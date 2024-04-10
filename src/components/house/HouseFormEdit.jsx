@@ -1,38 +1,40 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useCreateUserMutation,
-  useGetUserByIdQuery,
-  useUpdateAvatarMutation,
-  useUpdateUserMutation,
-} from "../../features/api/apiSlice";
-import UserForm from "./UserForm";
 import Swal from "sweetalert2";
 import { useState } from "react";
+import HouseForm from "./HouseForm";
+import { useGetHouseByIdQuery, useUpdateHouseMutation, useUploadImageMutation } from "../../features/api/apiHouseSlice";
 
-export default function UserFormEdit() {
+export default function houseFormEdit() {
+
   const navigate = useNavigate(); // Instanciamos la vaiable de useNavigate
   const params = useParams(); // Instanciamos la variable para obtener los parametros por URL
   const [file, setFile] = useState(null);
-  const [updateUser] = useUpdateUserMutation();
-  const [uploadAvatar] = useUpdateAvatarMutation();
+  const [updateHouse] = useUpdateHouseMutation();
+  const [updateImage] = useUploadImageMutation();
 
-  const handleChangeAvatar = (e) => {
+  const handleChangeImage = (e) => {
     setFile(e.target.files);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = {
-      _id : params.userId,
-      name: e.target.name.value,
-      lastname: e.target.lastname.value,
-      email: e.target.email.value,
-      userId: e.target.identification.value,
+    console.log(e.target);
+    const house = {
+      _id : params.id,
+      address : e.target.address.value,
+      city : e.target.city.value, 
+      state : e.target.state.value.split("-")[1],
+      size : e.target.size.value,
+      type : e.target.type.value,
+      zipCode : e.target.zipCode.value,
+      rooms : e.target.rooms.value,
+      bathrooms : e.target.bathrooms.value, 
+      parking : e.target.parking.value === "Yes" ? true : false,
+      price : e.target.price.value,
+      code : e.target.code.value
     };
-    // console.log(params.userId);
-    // console.log(`Este es el valor de user._id ${user._id}`);
     try {
-      const response = await updateUser(user);
+      const response = await updateHouse(house);
 
       if (response.data.status == "error") {
         Swal.fire({
@@ -44,15 +46,15 @@ export default function UserFormEdit() {
         if(file){
           const formData = new FormData();
           formData.append("file", file[0]);
-          uploadAvatar({_id : params.userId, file: formData});
+          updateImage({_id : params.id, file: formData});
         }
         Swal.fire({
           icon: "success",
-          title: "Usuario actualizado correctamente",
+          title: "Casa actualizada correctamente",
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
-          navigate("/users");
+          navigate("/houses");
         });
       }
     } catch (error) {
@@ -61,7 +63,7 @@ export default function UserFormEdit() {
   };
 
   /** Se ejecuta al cargar el componente */
-  const {data: user, isLoading, isError, error} = useGetUserByIdQuery(params.userId);
+  const {data: house, isLoading, isError, error} = useGetHouseByIdQuery(params.id);
   if (isLoading)
     return (
       <div role="status" className="flex justify-center">
@@ -86,5 +88,5 @@ export default function UserFormEdit() {
     );
   else if (isError) return <div>Error: {error.message} </div>;
 
-  return <UserForm props={{ handleSubmit: handleSubmit, handleChangeAvatar:handleChangeAvatar, user: user }} />;
+  return <HouseForm handleSubmit = {handleSubmit} handleChangeImage = {handleChangeImage} house = {house} />;  
 }

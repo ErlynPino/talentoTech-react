@@ -1,17 +1,17 @@
 
 import { Link } from "react-router-dom";
-import { useRemoveUserMutation, useGetUsersQuery } from "../../features/api/apiSlice";
 import Swal from "sweetalert2";
-export default function UserList() {
+import { useGetHousesQuery, useRemoveHouseMutation } from "../../features/api/apiHouseSlice";
+export default function HouseList() {
   /*Obtiene el estado de una variable con Redux
   const users = useSelector((state) => state.users);
   */
- const { data: users, isLoading, isError, error} = useGetUsersQuery();
- const [deleteUser] = useRemoveUserMutation();
- const handleDelete = (user) => {
-  // console.log(user);
+ const { data: houses, isLoading, isError, error} = useGetHousesQuery();
+ const [deleteHouse] = useRemoveHouseMutation();
+
+ const handleDelete = (house) => {
   Swal.fire({
-    title: `¿Estás seguro de que deseas eliminar al usuario ${user.name} ${user.lastname}?`,
+    title: `¿Estás seguro de que deseas eliminar la casa con dirección ${house.address}, ${house.city}, ${house.state}?`,
     text: "¡Esta acción no se puede revertir!",
     icon: "warning",
     showCancelButton: true,
@@ -20,7 +20,7 @@ export default function UserList() {
     confirmButtonText: "Estoy seguro"
   }).then((result) => {
     if (result.isConfirmed) {
-        deleteUser(user._id);
+        deleteHouse(house._id);
       }
     });
  }
@@ -37,42 +37,84 @@ export default function UserList() {
 //  const users = data;
   return (
     <>
-      <div className="overflow-x-auto flex-justify-center px-5 py-5 h-screen">
-        <table className="table-auto divide-y w-full">
+      <div className="overflow-x-auto flex-justify-center px-5 py-5 h-screen w-full">
+        <table className="table-auto divide-y border">
           <thead className="bg-gray-800 text-white">
-            <th className="px-6 py-3 text-center ">
-              Name
+            <th className="px-6 py-3 text-center">
+                Address
             </th>
-            <th className="px-6 py-3 text-center ">
-              LastName
+            <th className="px-6 py-3 text-center">
+                City
             </th>
-            <th className="px-6 py-3 text-center ">
-              Email
+            <th className="px-6 py-3 text-center">
+                State
             </th>
-            <th className="px-6 py-3 text-center ">
-              Identification
+            <th className="px-6 py-3 text-center">
+                Size
             </th>
-            <th className="px-6 py-3 text-center ">
-              Avatar
+            <th className="px-6 py-3 text-center">
+                Type
             </th>
-            <th className="px-6 py-3 text-center ">
-              Actions
+            <th className="px-6 py-3 text-center">
+                ZipCode
+            </th>
+            <th className="px-6 py-3 text-center">
+                Rooms
+            </th>
+            <th className="px-6 py-3 text-center">
+                Bathrooms
+            </th>
+            <th className="px-6 py-3 text-center">
+                Parking
+            </th>
+            <th className="px-6 py-3 text-center">
+                Price
+            </th>
+            <th className="px-6 py-3 text-center">
+                Code
+            </th>
+            <th className="px-6 py-3 text-center">
+                Image
+            </th>
+            <th className="px-6 py-3 text-center">
+                Actions
             </th>
           </thead>
-          <tbody className="bg-white divide-y divide-white border-t">
-            {users.map((user) => (
-              <tr className="hover:bg-border indigo-800" key={user._id}>
+          <tbody className="bg-white divide-y divide-white border-t"> 
+            {houses.map(house => (
+              <tr className="" key={house._id}>
                 <td className="px-6 py-3 bg-gray-200 text-center">
-                  {user.name}
+                  {house.address}
                 </td>
                 <td className="px-6 py-3 bg-gray-200 text-center">
-                  {user.lastname}
+                  {house.city}
                 </td>
                 <td className="px-6 py-3 bg-gray-200 text-center">
-                  {user.email}
+                  {house.state}
                 </td>
                 <td className="px-6 py-3 bg-gray-200 text-center">
-                  {user.userId}
+                  {house.size}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                  {house.type}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                  {house.zipCode}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-centeblack">
+                  {house.rooms}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                  {house.bathrooms}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                    {house.parking === true ? "Yes" : "No"}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                  {house.price}
+                </td>
+                <td className="px-6 py-3 bg-gray-200 text-center">
+                  {house.code}
                 </td>
                 <td className="px-6 py-3 bg-gray-200 text-center">
                   <img
@@ -80,15 +122,15 @@ export default function UserList() {
                       width: 50,
                       height: 50,
                     }}
-                    src={`https://localhost:3000/${user.avatar}`}
-                    alt="User's avatar"
+                    src={`https://localhost:3000/${house.image}`}
+                    alt="House's image"
                     className="mx-auto transition-transform duration-150 transform hover:scale-110"
                   />
                 </td>
                 <td className="py-3 bg-gray-200 text-center">
                   <div className="inline-flex rounded-md" role="group">
                     <Link
-                      to={`/user/${user._id}`}
+                      to={`/house/${house._id}`}
                       className="text-slate-800 hover:text-blue-600 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-l-lg font-medium px-4 py-2 inline-flex space-x-1 items-center hover:shadow-lg hover:shadow-blue-800/50"
                     >
                       <span>
@@ -110,7 +152,7 @@ export default function UserList() {
                       <span className="hidden md:inline-block">Edit</span>
                     </Link>
                     <button onClick={() => {
-                      handleDelete(user)
+                      handleDelete(house)
                     }}
                     type="button"
                     className="text-slate-800 hover:text-red-500 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-r-lg font-medium px-4 py-2 inline-flex space-x-1 items-center hover:shadow-lg hover:shadow-red-500/20">
