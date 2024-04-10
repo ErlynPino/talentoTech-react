@@ -3,7 +3,7 @@ export default function Footer() {
     <div className="bg-gray-700 text-white py-5 w-100 xl:mb-auto">
       <p>
         <span className="text-green-200"><strong>Desarrollador: </strong></span>
-        <span>Diego Núñez</span>
+        <span>Erlyn Pino</span>
       </p>
       <div className="inline-flex px-1 py-2">
         <a href="https://www.linkedin.com/in/ddienu/" target="blank">
